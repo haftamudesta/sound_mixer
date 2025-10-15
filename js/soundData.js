@@ -64,3 +64,33 @@ export const sounds = [
     description: 'Crickets and night sounds',
   },
 ];
+
+export const defaultPresets = {
+  focus: {
+    name: 'Focus',
+    icon: 'fa-brain',
+    sounds: {
+      rain: 30,
+      cafe: 20,
+      wind: 10,
+    },
+  },
+  relax: {
+    name: 'Relax',
+    icon: 'fa-spa',
+    sounds: {
+      ocean: 40,
+      forest: 30,
+      wind: 20,
+    },
+  },
+  sleep: {
+    name: 'Sleep',
+    icon: 'fa-bed',
+    sounds: {
+      rain: 40,
+      night: 30,
+      wind: 15,
+    },
+  },
+};
