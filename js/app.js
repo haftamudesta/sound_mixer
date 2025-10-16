@@ -21,7 +21,11 @@ class AmbientMixer {
     } catch (error) {
       console.error('Failed to initialize app: ', error);
     }
+
+    
   }
+
+  
   async loadAllSounds() {
     sounds.forEach(async(sound) => {
       const audioUrl = `audio/${sound.file}`;
@@ -38,7 +42,17 @@ class AmbientMixer {
         const soundId = e.target.closest('.play-btn').dataset.sound;
         await this.toggleSound(soundId);
       }
-    })
+    });
+
+    document.addEventListener('input', (e) => {
+      if (e.target.classList.contains('volume-slider')) {
+        const soundId = e.target.dataset.sound;
+        const volume = parseInt(e.target.value);
+        console.log(soundId,volume)
+        this.setSoundVolume(soundId, volume);
+      }
+    });
+
 }
 
 
@@ -75,6 +89,35 @@ async toggleSound(soundId) {
     }
 
     this.updateMainPlayButtonState();
+  }
+
+  setSoundVolume(soundId, volume) {
+    this.currentSoundState[soundId] = volume;
+
+    const effectiveVolume = (volume * this.masterVolume) / 100;
+
+    const audio = this.soundManager.audioElements.get(soundId);
+
+    if (audio) {
+      audio.volume = effectiveVolume / 100;
+    }
+
+    this.ui.updateVolumeDisplay(soundId, volume);
+
+    this.updateMainPlayButtonState();
+  }
+
+  updateMainPlayButtonState() {
+    let anySoundsPlaying = false;
+    for (const [soundId, audio] of this.soundManager.audioElements) {
+      if (!audio.paused) {
+        anySoundsPlaying = true;
+        break;
+      }
+    }
+
+    this.soundManager.isPlaying = anySoundsPlaying;
+    this.ui.updateMainPlayButton(anySoundsPlaying);
   }
 
 }
