@@ -9,6 +9,7 @@ class AmbientMixer {
     this.presetManager = null;
     this.timer = null;
     this.currentSoundState = {};
+    this.masterVolume = 100;
     this.isInitialized = false;
   }
   async init() {
@@ -53,10 +54,10 @@ class AmbientMixer {
       }
     });
 
-}
+  }
 
 
-async toggleSound(soundId) {
+ async toggleSound(soundId) {
     const audio = this.soundManager.audioElements.get(soundId);
 
     if (!audio) {
@@ -97,9 +98,11 @@ async toggleSound(soundId) {
     const effectiveVolume = (volume * this.masterVolume) / 100;
 
     const audio = this.soundManager.audioElements.get(soundId);
+    console.log("Volume is:",volume)
 
     if (audio) {
-      audio.volume = effectiveVolume / 100;
+    console.log("Audio is",audio)
+      audio.volume = effectiveVolume/100;
     }
 
     this.ui.updateVolumeDisplay(soundId, volume);
