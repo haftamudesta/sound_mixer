@@ -54,6 +54,15 @@ class AmbientMixer {
       }
     });
 
+    const masterVolumeSlider = document.getElementById('masterVolume');
+    if (masterVolumeSlider) {
+      masterVolumeSlider.addEventListener('input', (e) => {
+        const volume = parseInt(e.target.value);
+        this.setMasterVolume(volume);
+      });
+    }
+
+
   }
 
 
@@ -121,6 +130,18 @@ class AmbientMixer {
 
     this.soundManager.isPlaying = anySoundsPlaying;
     this.ui.updateMainPlayButton(anySoundsPlaying);
+  }
+
+  setMasterVolume(volume) {
+    this.masterVolume = volume;
+
+    
+    const masterVolumeValue = document.getElementById('masterVolumeValue');
+    if (masterVolumeValue) {
+      masterVolumeValue.textContent = `${volume}%`;
+    }
+
+    this.applyMasterVolumeToAll();
   }
 
 }
