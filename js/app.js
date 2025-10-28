@@ -1,13 +1,17 @@
 import { sounds,defaultPresets } from "./soundData.js";
 import { SoundManager } from "./soundManager.js";
-import {UI} from "./ui.js"
+import {UI} from "./ui.js";
+import { Timer } from "./timer.js";
 
 class AmbientMixer {
   constructor() {
     this.soundManager = new SoundManager();
     this.ui = new UI();
     this.presetManager = null;
-    this.timer = null;
+    this.timer = new Timer(
+      () => this.onTimerComplete(),
+      (minutes, seconds) => this.ui.updateTimerDisplay(minutes, seconds)
+    );
     this.currentSoundState = {};
     this.masterVolume = 100;
     this.isInitialized = false;
@@ -68,6 +72,11 @@ class AmbientMixer {
       });
     }
 
+    if (this.ui.resetButton) {
+      this.ui.resetButton.addEventListener('click', () => {
+        this.resetAll();
+      });
+    }
   }
 
 
@@ -201,6 +210,24 @@ class AmbientMixer {
     }
   }
 
+  resetAll() {
+    this.soundManager.stopAll();
+
+    this.masterVolume = 100;
+
+    this.timer.stop();
+    if (this.ui.timerSelect) {
+      this.ui.timerSelect.value = '0';
+    }
+
+    this.ui.setActivePreset(null);
+
+    sounds.forEach((sound) => {
+      this.currentSoundState[sound.id] = 0;
+    });
+
+    this.ui.resetUI();
+  }
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
