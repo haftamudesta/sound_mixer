@@ -235,8 +235,58 @@ class AmbientMixer {
     this.ui.resetUI();
   }
 
+  loadPreset(presetKey, custom = false) {
+    let preset;
+
+    if (custom) {
+      preset = this.presetManager.loadPreset(presetKey);
+    } else {
+      preset = defaultPresets[presetKey];
+    }
+
+    if (!preset) {
+      console.error(`Preset ${presetKey} not found`);
+      return;
+    }
+
+    this.soundManager.stopAll();
 
 
+    sounds.forEach((sound) => {
+      this.currentSoundState[sound.id] = 0;
+      this.ui.updateVolumeDisplay(sound.id, 0);
+      this.ui.updateSoundPlayButton(sound.id, false);
+    });
+
+
+    for (const [soundId, volume] of Object.entries(preset.sounds)) {
+
+      this.currentSoundState[soundId] = volume;
+
+
+      this.ui.updateVolumeDisplay(soundId, volume);
+
+
+      const effectiveVolume = (volume * this.masterVolume) / 100;
+
+
+      const audio = this.soundManager.audioElements.get(soundId);
+
+      if (audio) {
+        audio.volume = effectiveVolume / 100;
+
+        audio.play();
+        this.ui.updateSoundPlayButton(soundId, true);
+      }
+    }
+
+    this.soundManager.isPlaying = true;
+    this.ui.updateMainPlayButton(true);
+
+    if (presetKey) {
+      this.ui.setActivePreset(presetKey);
+    }
+  }
 
 }
 
