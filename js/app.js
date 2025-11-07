@@ -1,6 +1,7 @@
-import { sounds,defaultPresets } from "./soundData.js";
+import { sounds, defaultPresets } from "./soundData.js";
 import { SoundManager } from "./soundManager.js";
-import {UI} from "./ui.js";
+import { PresetManager } from './presetManager.js';
+import { UI } from "./ui.js";
 import { Timer } from "./timer.js";
 
 class AmbientMixer {
@@ -27,14 +28,14 @@ class AmbientMixer {
       console.error('Failed to initialize app: ', error);
     }
 
-    
+
   }
 
-  
+
   async loadAllSounds() {
-    sounds.forEach(async(sound) => {
+    sounds.forEach(async (sound) => {
       const audioUrl = `audio/${sound.file}`;
-      const success =await this.soundManager.loadSound(sound.id, audioUrl);
+      const success = await this.soundManager.loadSound(sound.id, audioUrl);
       if (!success) {
         console.warn(`Could not load sound: ${sound.name} from ${audioUrl}`);
       }
@@ -47,13 +48,18 @@ class AmbientMixer {
         const soundId = e.target.closest('.play-btn').dataset.sound;
         await this.toggleSound(soundId);
       }
+
+      if (e.target.closest('.preset-btn')) {
+        const presetKey = e.target.closest('.preset-btn').dataset.sound;
+        await this.loadPreset(presetKey);
+      }
     });
 
     document.addEventListener('input', (e) => {
       if (e.target.classList.contains('volume-slider')) {
         const soundId = e.target.dataset.sound;
         const volume = parseInt(e.target.value);
-        console.log(soundId,volume)
+        console.log(soundId, volume)
         this.setSoundVolume(soundId, volume);
       }
     });
@@ -80,7 +86,7 @@ class AmbientMixer {
   }
 
 
- async toggleSound(soundId) {
+  async toggleSound(soundId) {
     const audio = this.soundManager.audioElements.get(soundId);
 
     if (!audio) {
@@ -89,7 +95,7 @@ class AmbientMixer {
     }
 
     if (audio.paused) {
-      
+
       const card = document.querySelector(`[data-sound="${soundId}"]`);
       const slider = card.querySelector('.volume-slider');
       let volume = parseInt(slider.value);
@@ -157,11 +163,11 @@ class AmbientMixer {
     const effectiveVolume = (volume * this.masterVolume) / 100;
 
     const audio = this.soundManager.audioElements.get(soundId);
-    console.log("Volume is:",volume)
+    console.log("Volume is:", volume)
 
     if (audio) {
-    console.log("Audio is",audio)
-      audio.volume = effectiveVolume/100;
+      console.log("Audio is", audio)
+      audio.volume = effectiveVolume / 100;
     }
 
     this.ui.updateVolumeDisplay(soundId, volume);
@@ -185,7 +191,7 @@ class AmbientMixer {
   setMasterVolume(volume) {
     this.masterVolume = volume;
 
-    
+
     const masterVolumeValue = document.getElementById('masterVolumeValue');
     if (masterVolumeValue) {
       masterVolumeValue.textContent = `${volume}%`;
@@ -228,9 +234,13 @@ class AmbientMixer {
 
     this.ui.resetUI();
   }
+
+
+
+
 }
 
-document.addEventListener("DOMContentLoaded",()=>{
-        const app=new AmbientMixer;
-        app.init()
+document.addEventListener("DOMContentLoaded", () => {
+  const app = new AmbientMixer;
+  app.init()
 })
