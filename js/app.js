@@ -54,7 +54,7 @@ class AmbientMixer {
       }
 
       if (e.target.closest('.preset-btn')) {
-        const presetKey = e.target.closest('.preset-btn').dataset.sound;
+        const presetKey = e.target.closest('.preset-btn').dataset.preset;
         await this.loadPreset(presetKey);
       }
     });
