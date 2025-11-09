@@ -87,6 +87,14 @@ class AmbientMixer {
         this.resetAll();
       });
     }
+    const saveButton = document.getElementById('savePreset');
+    if (saveButton) {
+      saveButton.addEventListener('click', () => {
+        this.showSavePresetModal();
+      });
+    }
+
+
   }
 
 
@@ -290,6 +298,18 @@ class AmbientMixer {
     if (presetKey) {
       this.ui.setActivePreset(presetKey);
     }
+  }
+  showSavePresetModal() {
+    const hasActiveSounds = Object.values(this.currentSoundState).some(
+      (v) => v > 0
+    );
+
+    if (!hasActiveSounds) {
+      alert('No active sounds for preset');
+      return;
+    }
+
+    this.ui.showModal();
   }
 }
 

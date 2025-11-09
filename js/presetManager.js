@@ -36,5 +36,11 @@ export class PresetManager {
         return presetId;
     }
 
+    presetNameExists(name) {
+        return Object.values(this.customPresets).some(
+            (preset) => preset.name === name
+        );
+    }
+
 
 }

@@ -129,7 +129,7 @@ export class UI {
 
 
   resetUI() {
-    
+
     const sliders = document.querySelectorAll('.volume-slider');
     sliders.forEach((slider) => {
       slider.value = 0;
@@ -223,4 +223,6 @@ export class UI {
       icon.classList.replace('fa-sun', 'fa-moon');
     }
   }
+
+
 }

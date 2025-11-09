@@ -8,9 +8,6 @@ export class Timer {
     this.isRunning = false;
   }
 
-  
-    
-
   stop() {
     if (this.intervalId) {
       clearInterval(this.intervalId);
