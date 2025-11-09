@@ -18,11 +18,15 @@ class AmbientMixer {
     this.isInitialized = false;
   }
   async init() {
-    this.ui.init();
-    this.ui.renderSoundCards(sounds)
-    this.setupEventListeners()
+
     try {
+      this.ui.init();
+      this.ui.renderSoundCards(sounds)
+      this.setupEventListeners()
       this.loadAllSounds();
+      sounds.forEach((sound) => {
+        this.currentSoundState[sound.id] = 0;
+      })
       this.isInitialized = true;
     } catch (error) {
       console.error('Failed to initialize app: ', error);
@@ -287,7 +291,6 @@ class AmbientMixer {
       this.ui.setActivePreset(presetKey);
     }
   }
-
 }
 
 document.addEventListener("DOMContentLoaded", () => {
