@@ -101,6 +101,14 @@ class AmbientMixer {
       });
     }
 
+    if (this.ui.modal) {
+      this.ui.modal.addEventListener('click', (e) => {
+        if (e.target === this.ui.modal) {
+          this.ui.hideModal();
+        }
+      });
+    }
+
 
   }
 
