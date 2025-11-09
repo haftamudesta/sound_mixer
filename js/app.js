@@ -8,7 +8,7 @@ class AmbientMixer {
   constructor() {
     this.soundManager = new SoundManager();
     this.ui = new UI();
-    this.presetManager = null;
+    this.presetManager = new PresetManager();
     this.timer = new Timer(
       () => this.onTimerComplete(),
       (minutes, seconds) => this.ui.updateTimerDisplay(minutes, seconds)
@@ -91,6 +91,13 @@ class AmbientMixer {
     if (saveButton) {
       saveButton.addEventListener('click', () => {
         this.showSavePresetModal();
+      });
+    }
+
+    const confirmSaveButton = document.getElementById('confirmSave');
+    if (confirmSaveButton) {
+      confirmSaveButton.addEventListener('click', () => {
+        this.saveCurrentPreset();
       });
     }
 
@@ -326,6 +333,32 @@ class AmbientMixer {
 
     this.ui.showModal();
   }
+
+  saveCurrentPreset() {
+    const nameInput = document.getElementById('presetName');
+    const name = nameInput.value.trim();
+
+    if (!name) {
+      alert('Please enter a preset name');
+      return;
+    }
+
+    if (this.presetManager.presetNameExists(name)) {
+      alert(`A preset with the name ${name} already exists`);
+      return;
+    }
+
+    const presetId = this.presetManager.savePreset(
+      name,
+      this.currentSoundState
+    );
+    this.ui.addCustomPreset(name, presetId);
+
+    this.ui.hideModal();
+
+    console.log(`Preset "${name}" saved successfully with ID: ${presetId}`);
+  }
+
 }
 
 document.addEventListener("DOMContentLoaded", () => {
