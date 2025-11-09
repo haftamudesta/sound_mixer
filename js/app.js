@@ -94,6 +94,13 @@ class AmbientMixer {
       });
     }
 
+    const cancelSaveButton = document.getElementById('cancelSave');
+    if (cancelSaveButton) {
+      cancelSaveButton.addEventListener('click', () => {
+        this.ui.hideModal();
+      });
+    }
+
 
   }
 
