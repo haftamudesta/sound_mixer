@@ -55,6 +55,15 @@ class AmbientMixer {
         await this.toggleSound(soundId);
       }
 
+      if (e.target.closest('.delete-preset')) {
+        e.stopPropagation();
+        const presetId = e.target.closest('.delete-preset').dataset.preset;
+
+        this.deleteCustomPreset(presetId);
+
+        return;
+      }
+
       if (e.target.closest('.preset-btn')) {
         const presetKey = e.target.closest('.preset-btn').dataset.preset;
         await this.loadPreset(presetKey);
@@ -372,6 +381,12 @@ class AmbientMixer {
     const customPresets = this.presetManager.customPresets;
     for (const [presetId, preset] of Object.entries(customPresets)) {
       this.ui.addCustomPreset(preset.name, presetId);
+    }
+  }
+  deleteCustomPreset(presetId) {
+    if (this.presetManager.deletePreset(presetId)) {
+      this.ui.removeCustomPreset(presetId);
+      console.log(`Preset ${presetId} deleted`);
     }
   }
 
