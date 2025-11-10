@@ -23,6 +23,8 @@ class AmbientMixer {
       this.ui.init();
       this.ui.renderSoundCards(sounds)
       this.setupEventListeners()
+
+      this.loadCustomPresetsUI(); ``
       this.loadAllSounds();
       sounds.forEach((sound) => {
         this.currentSoundState[sound.id] = 0;
@@ -56,6 +58,11 @@ class AmbientMixer {
       if (e.target.closest('.preset-btn')) {
         const presetKey = e.target.closest('.preset-btn').dataset.preset;
         await this.loadPreset(presetKey);
+      }
+
+      if (e.target.closest('.custom-preset-btn')) {
+        const presetKey = e.target.closest('.custom-preset-btn').dataset.preset;
+        await this.loadPreset(presetKey, true);
       }
     });
 
@@ -354,9 +361,18 @@ class AmbientMixer {
     );
     this.ui.addCustomPreset(name, presetId);
 
+    this.ui.addCustomPreset(name, presetId);
+
     this.ui.hideModal();
 
     console.log(`Preset "${name}" saved successfully with ID: ${presetId}`);
+  }
+
+  loadCustomPresetsUI() {
+    const customPresets = this.presetManager.customPresets;
+    for (const [presetId, preset] of Object.entries(customPresets)) {
+      this.ui.addCustomPreset(preset.name, presetId);
+    }
   }
 
 }
