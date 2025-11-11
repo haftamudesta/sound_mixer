@@ -132,9 +132,19 @@ class AmbientMixer {
       });
     }
 
-
+    const timerSelect = document.getElementById('timerSelect');
+    if (timerSelect) {
+      timerSelect.addEventListener('change', (e) => {
+        const minutes = parseInt(e.target.value);
+        if (minutes > 0) {
+          this.timer.start(minutes);
+          console.log(`Timer started for ${minutes} minutes`);
+        } else {
+          this.timer.stop();
+        }
+      });
+    }
   }
-
 
   async toggleSound(soundId) {
     const audio = this.soundManager.audioElements.get(soundId);
